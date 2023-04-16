@@ -2,14 +2,10 @@ const express = require('express');
 const cors = require('cors');
 const app = express();
 const porta = process.env.PORT;
-
-
 app.use(cors()); // Habilita o CORS para todas as rotas
-
 app.use(express.json()); // Habilita o uso de JSON no corpo da requisição
 
-
-app.get('/adicionar-valores', (req, res) => {
+app.post('/adicionar-valores', (req, res) => {
   const { google } = require('googleapis');
   const keys = require('./credentials.json');
 
@@ -23,7 +19,7 @@ app.get('/adicionar-valores', (req, res) => {
   const spreadsheetId = '1TsYHgoWVp8JMzyioWMWQGe-ueGpus0WEDkYdgsKzSno';
   const range = 'A:A';
 
-  const newValues = req.query.valores;
+  const newValues = req.body.values;
 
   google.sheets({ version: 'v4', auth: client }).spreadsheets.values.append({
     spreadsheetId,
@@ -38,9 +34,6 @@ app.get('/adicionar-valores', (req, res) => {
     res.status(200).json({ message: 'Valores adicionados com sucesso!' });
   });
 });
-
-
-
 
 app.get('/dados-do-sheets', (req, res) => {
   const { google } = require('googleapis');
